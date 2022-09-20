@@ -46,7 +46,8 @@ class NeuralSDFTex(BaseNeuralField):
 
         if self.position_input:
             self.input_dim += self.pos_embed_dim
-
+        
+        assert False
         self.decoder = BasicDecoder(self.input_dim, 4, get_activation_class(self.activation_type), True,
                                     layer=get_layer_class(self.activation_type), num_layers=self.num_layers,
                                     hidden_dim=self.hidden_dim, skip=[])
@@ -145,7 +146,7 @@ class NeuralSDF(BaseNeuralField):
 
         if self.position_input:
             self.input_dim += self.pos_embed_dim
-
+        assert False
         self.decoder = BasicDecoder(self.input_dim, 1, get_activation_class(self.activation_type), True,
                                     layer=get_layer_class(self.layer_type), num_layers=self.num_layers,
                                     hidden_dim=self.hidden_dim, skip=[])

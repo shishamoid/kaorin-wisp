@@ -43,8 +43,8 @@ class BasicDecoder(nn.Module):
         """
         super().__init__()
         
-        self.input_dim = input_dim
-        self.output_dim = output_dim        
+        self.input_dim = input_dim + 20 #inputの次元を増やす
+        self.output_dim = output_dim   
         self.activation = activation
         self.bias = bias
         self.layer = layer
@@ -61,6 +61,12 @@ class BasicDecoder(nn.Module):
         """
         layers = []
         for i in range(self.num_layers):
+            """
+            print("------basicdecoder")#Layer 定義
+            print("input_dim",self.input_dim)
+            print(self.num_layers)
+            print(i)
+            """
             if i == 0: 
                 layers.append(self.layer(self.input_dim, self.hidden_dim, bias=self.bias))
             elif i in self.skip:
@@ -69,6 +75,13 @@ class BasicDecoder(nn.Module):
                 layers.append(self.layer(self.hidden_dim, self.hidden_dim, bias=self.bias))
         self.layers = nn.ModuleList(layers)
         self.lout = self.layer(self.hidden_dim, self.output_dim, bias=self.bias)
+
+        #print(self.output_dim)
+        #self.lout = self.layer(self.hidden_dim, self.output_dim, bias=self.bias)
+        #self.layers = nn.ModuleList(layers)
+        
+        #最後のレイヤーの出力次元を調整したい  
+        #print("self.output_dim=========",self.output_dim)
 
     def forward(self, x, return_h=False):
         """Run the MLP!
@@ -83,8 +96,10 @@ class BasicDecoder(nn.Module):
                 - The last hidden layer of shape [batch, ..., hidden_dim]
         """
         N = x.shape[0]
+        #print("======basic decoders.py======")
 
         for i, l in enumerate(self.layers):
+            #print(l(x).shape)
             if i == 0:
                 h = self.activation(l(x))
             elif i in self.skip:
@@ -95,6 +110,12 @@ class BasicDecoder(nn.Module):
         
         out = self.lout(h)
         
+        """
+        print("return_h",return_h)
+        print("out.shape",out.shape)
+        print("self.lout(h).shape",self.lout(h).shape)
+        """
+
         if return_h:
             return out, h
         else:

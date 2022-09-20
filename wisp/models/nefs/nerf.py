@@ -54,7 +54,13 @@ class NeuralRadianceField(BaseNeuralField):
 
         if self.position_input:
             self.input_dim += self.pos_embed_dim
-
+            
+        print("###############")
+        print("input_dim",self.input_dim) #59
+        print("self.activation_type",self.activation_type)
+        print("get_activation_class",get_activation_class(self.activation_type))
+        print("get_layer_class",get_layer_class(self.layer_type))
+        print("###############")
         self.decoder = BasicDecoder(self.input_dim, 4, get_activation_class(self.activation_type), True,
                                     layer=get_layer_class(self.layer_type), num_layers=self.num_layers,
                                     hidden_dim=self.hidden_dim, skip=[])
@@ -155,6 +161,7 @@ class NeuralRadianceField(BaseNeuralField):
         timer.check("rf_rgba_interpolate")
 
         # Optionally concat the positions to the embedding, and also concatenate embedded view directions.
+
         if self.position_input:
             fdir = torch.cat([feats,
                 self.pos_embedder(coords.reshape(-1, 3)),
@@ -162,8 +169,24 @@ class NeuralRadianceField(BaseNeuralField):
         else: 
             fdir = torch.cat([feats,
                 self.view_embedder(-ray_d)[:,None].repeat(1, num_samples, 1).view(-1, self.view_embed_dim)], dim=-1)
-        timer.check("rf_rgba_embed_cat")
+        #print("--------------------")
+        #arr = np.random.randn(int(fdir.size(dim=0)),fdir.size(dim=1)) #とりあえず  3割くらいの配列を作成
+        arr = np.random.randn(int(fdir.size(dim=0)),20) #59に20次元追加する
+
+        tensorx = torch.from_numpy(arr.astype(np.float32)).clone()
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        tensorx = tensorx.to(device)
+        #print("===================")
+        #print(fdir.shape)
+        #print(fdir[713761].shape)
+        #print(tensorx.shape)
+        #print(fdir.shape)
+        fdir = torch.cat([tensorx,fdir],dim=1) #乱数追加
+        #print(fdir.shape)
+        #print("========fdir======")
         
+        timer.check("rf_rgba_embed_cat")
+
         # Decode high-dimensional vectors to RGBA.
         rgba = self.decoder(fdir)
         timer.check("rf_rgba_decode")

@@ -111,8 +111,19 @@ class PackedRFTracer(BaseTracer):
         del ridx, pidx, rays
 
         # Compute optical thickness
+        """
+        print("---packed_rf_tracer.py")
+        print(density.shape)
+        print(density.reshape(-1, 1).shape)
+        print(deltas.shape)
+        print(deltas.shape)
+        print("=====-packed_rf_tracer.py") 
+        """
         tau = density.reshape(-1, 1) * deltas
+        
         del density, deltas
+        
+        torch.cuda.empty_cache() #メモリ解放 https://qiita.com/kikusui6192/items/f7d4c0aee294f03afff6
 
         # Perform volumetric integration
         ray_colors, transmittance = spc_render.exponential_integration(color.reshape(-1, 3), tau, boundary, exclusive=True)

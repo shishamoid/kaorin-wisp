@@ -110,7 +110,7 @@ def load_nerf_standard_data(root, split='train', bg_color='white', num_workers=-
         mip = 0
 
     if len(transforms) == 1:
-        transform_dict['train'] = transforms[0]
+        transform_dict[split] = transforms[0]
         train_only = True
     elif len(transforms) == 3:
         fnames = [os.path.basename(transform) for transform in transforms]
