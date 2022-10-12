@@ -402,6 +402,8 @@ def get_modules_from_config(args):
     pipeline.to(device)
 
     if args.dataset_type == "multiview":
+        print("******")
+        print(pipeline.nef.grid is not None)
         transform = SampleRays(args.num_rays_sampled_per_img)
         train_dataset = MultiviewDataset(**vars(args), transform=transform)
         train_dataset.init()

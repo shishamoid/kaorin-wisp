@@ -577,6 +577,9 @@ class WispApp(ABC):
         gl.glReadPixels(0, 0, self.width, self.height,
                         gl.GL_RGB, gl.GL_UNSIGNED_BYTE, framebuffer)
         framebuffer = np.flip(framebuffer, 0)
+        #保存
+        print(framebuffer.shape)
+
         ext.png.from_array(framebuffer, 'RGB').save(path + '_color.png')
 
         framebuffer = np.zeros((self.width, self.height), dtype=np.float32)

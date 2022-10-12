@@ -43,7 +43,8 @@ class BasicDecoder(nn.Module):
         """
         super().__init__()
         
-        self.input_dim = input_dim + 20 #inputの次元を増やす
+        #self.input_dim = input_dim + 40 #inputの次元を増やす
+        self.input_dim = input_dim
         self.output_dim = output_dim   
         self.activation = activation
         self.bias = bias
@@ -198,4 +199,3 @@ def average(weight):
         (torch.FloatTensor): Matrix of shape [M, N].
     """
     return weight / weight.sum()
-

@@ -41,6 +41,8 @@ class NeuralRadianceField(BaseNeuralField):
                                                                          self.embedder_type == "positional")
         log.info(f"Position Embed Dim: {self.pos_embed_dim}")
         log.info(f"View Embed Dim: {self.view_embed_dim}")
+        print(f"Position Embed Dim: {self.pos_embed_dim}")
+        print(f"View Embed Dim: {self.view_embed_dim}")
 
     def init_decoder(self):
         """Initializes the decoder object. 
@@ -171,19 +173,16 @@ class NeuralRadianceField(BaseNeuralField):
                 self.view_embedder(-ray_d)[:,None].repeat(1, num_samples, 1).view(-1, self.view_embed_dim)], dim=-1)
         #print("--------------------")
         #arr = np.random.randn(int(fdir.size(dim=0)),fdir.size(dim=1)) #とりあえず  3割くらいの配列を作成
-        arr = np.random.randn(int(fdir.size(dim=0)),20) #59に20次元追加する
+        #torch.manual_seed(0)# seed固定
+        """
+        arr = np.random.randn(int(fdir.size(dim=0)),40) #59に40次元追加する
 
         tensorx = torch.from_numpy(arr.astype(np.float32)).clone()
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         tensorx = tensorx.to(device)
-        #print("===================")
-        #print(fdir.shape)
-        #print(fdir[713761].shape)
-        #print(tensorx.shape)
-        #print(fdir.shape)
+
         fdir = torch.cat([tensorx,fdir],dim=1) #乱数追加
-        #print(fdir.shape)
-        #print("========fdir======")
+        """
         
         timer.check("rf_rgba_embed_cat")
 
@@ -199,4 +198,3 @@ class NeuralRadianceField(BaseNeuralField):
         timer.check("rf_rgba_activation")
         
         return dict(rgb=colors, density=density)
-
