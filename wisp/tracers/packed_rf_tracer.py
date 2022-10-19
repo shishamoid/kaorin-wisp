@@ -78,8 +78,9 @@ class PackedRFTracer(BaseTracer):
         # By default, PackedRFTracer will attempt to use the highest level of detail for the ray sampling.
         # This however may not actually do anything; the ray sampling behaviours are often single-LOD
         # and is governed by however the underlying feature grid class uses the BLAS to implement the sampling.
-        print("nef.grid",nef.grid)
-        print("============")
+        
+        #print("nef.grid",nef.grid)
+        #print("============")
         ridx, pidx, samples, depths, deltas, boundary = nef.grid.raymarch(rays, 
                 level=nef.grid.active_lods[lod_idx], num_samples=num_steps, raymarch_type=raymarch_type)
 

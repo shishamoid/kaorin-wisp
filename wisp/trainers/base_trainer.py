@@ -142,6 +142,7 @@ class BaseTrainer(ABC):
             self.exp_name,
             f'{datetime.now().strftime("%Y%m%d-%H%M%S")}'
         )
+        #追記　書き込み 
         self.writer = SummaryWriter(self.log_dir, purge_step=0)
         self.writer.add_text('Info', self.info)
         self.render_every = render_every
