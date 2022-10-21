@@ -580,7 +580,7 @@ class WispApp(ABC):
 
         #保存
         print("shape",framebuffer.shape)
-        assert False
+        #assert False
 
         ext.png.from_array(framebuffer, 'RGB').save(path + '_color.png')
 

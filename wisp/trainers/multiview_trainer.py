@@ -161,7 +161,7 @@ class MultiviewTrainer(BaseTrainer):
                 print("len(rb.cpu().image().byte().rgb.numpy())",len(rb.cpu().image().byte().rgb.numpy()))
                 print(len(img_name))
         
-                self.make_error_map(rb.cpu().image().byte().rgb.numpy(),img_name)
+                #self.make_error_map(rb.cpu().image().byte().rgb.numpy(),img_name)
 
         psnr_total /= len(imgs)
         lpips_total /= len(imgs)
@@ -228,4 +228,4 @@ class MultiviewTrainer(BaseTrainer):
         gray_error.save(map_path)
         #write_png(map_path, gray_error)
         #print("difference",)
-        assert False
+        

@@ -1,3 +1,11 @@
 コマンド
-python3 app/main.py --config configs/ngp_nerf.yaml --multiview-dataset-format standard --mip 0 --dataset-path ./
+
+#nglod_nerf学習
+python3 app/main.py --config configs/nglod_nerf.yaml --dataset-path ./V8_ --num-lods 1
+
+#instantngp学習
+python3 app/main.py --config configs/ngp_nerf.yaml --multiview-dataset-format standard --mip 0 --dataset-path ./fox
 find ./ -name '*.py' -print0 | xargs -0 grep valid-only 
+
+#validationだけ
+python3 app/main.py --config configs/ngp_nerf.yaml --multiview-dataset-format standard --mip 0 --dataset-path ./fox --valid-only --pretrained ./_results/logs/runs/test-ngp-nerf/20221013-012056/model.pth
