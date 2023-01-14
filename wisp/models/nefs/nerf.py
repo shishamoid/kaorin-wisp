@@ -57,7 +57,10 @@ class NeuralRadianceField(BaseNeuralField):
         if self.position_input:
             self.input_dim += self.pos_embed_dim
             
+        #追加
         print("###############")
+        print(self.noise_dim)
+        #assert False
         print("input_dim",self.input_dim) #59
         print("self.activation_type",self.activation_type)
         print("get_activation_class",get_activation_class(self.activation_type))
@@ -65,7 +68,7 @@ class NeuralRadianceField(BaseNeuralField):
         print("###############")
         self.decoder = BasicDecoder(self.input_dim, 4, get_activation_class(self.activation_type), True,
                                     layer=get_layer_class(self.layer_type), num_layers=self.num_layers,
-                                    hidden_dim=self.hidden_dim, skip=[])
+                                    hidden_dim=self.hidden_dim, noise_dim=self.noise_dim,noise_size = self.noise_size,skip=[])
 
     def init_grid(self):
         """Initialize the grid object.
@@ -171,18 +174,17 @@ class NeuralRadianceField(BaseNeuralField):
         else: 
             fdir = torch.cat([feats,
                 self.view_embedder(-ray_d)[:,None].repeat(1, num_samples, 1).view(-1, self.view_embed_dim)], dim=-1)
-        #print("--------------------")
-        #arr = np.random.randn(int(fdir.size(dim=0)),fdir.size(dim=1)) #とりあえず  3割くらいの配列を作成
-        #torch.manual_seed(0)# seed固定
-        """
-        arr = np.random.randn(int(fdir.size(dim=0)),40) #59に40次元追加する
 
+        #乱数追加部分
+        noize_dim = self.noise_dim
+        noise_size = self.noise_size
+        
+        torch.manual_seed(0)
+        arr = np.random.randn(int(fdir.size(dim=0)),noize_dim)*noise_size
         tensorx = torch.from_numpy(arr.astype(np.float32)).clone()
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         tensorx = tensorx.to(device)
-
         fdir = torch.cat([tensorx,fdir],dim=1) #乱数追加
-        """
         
         timer.check("rf_rgba_embed_cat")
 

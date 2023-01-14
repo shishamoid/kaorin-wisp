@@ -106,7 +106,11 @@ class BaseTrainer(ABC):
         self.init_optimizer()
 
         # Training params
+        num_epochs = 300 #追加,なぜか変わらないので力技
         self.num_epochs = num_epochs
+        print("=======")
+        print("num_epochs",num_epochs)
+        #assert False
         self.batch_size = batch_size
         self.exp_name = exp_name if exp_name else "unnamed_experiment"
 
@@ -137,10 +141,17 @@ class BaseTrainer(ABC):
         self.log_dict = {}
         self.init_dataloader()
         
+        #追加 ディレクトリ作成
+        print(log_dir) #_results/logs/runs/
+        print(exp_name) #test-ngp-nerf
+        print(self.extra_args["log_dir_noise_dim"])
+  
         self.log_dir = os.path.join(
             log_dir,
-            self.exp_name,
-            f'{datetime.now().strftime("%Y%m%d-%H%M%S")}'
+            #self.exp_name,
+            #datetime.datetime.now().month
+            f'{datetime.now().strftime("%m%d-%H%M_")}' + 
+            "noise_dim" + self.extra_args["log_dir_noise_dim"] + "_noise_size" + self.extra_args["log_dir_noise_size"]
         )
         #追記　書き込み 
         self.writer = SummaryWriter(self.log_dir, purge_step=0)

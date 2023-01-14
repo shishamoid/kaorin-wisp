@@ -132,6 +132,12 @@ def parse_options(return_parser=False):
     net_group.add_argument('--position-input', action='store_true',
                           help='Use position as input.')
 
+    ##追加
+    net_group.add_argument('--noise_dim',type=int,
+                          help='noise dimension as input.')#ノイズ次元数
+    net_group.add_argument('--noise_size', type=int,
+                          help='noise size as input.')#ノイズ大きさ
+
     ###################
     # Arguments for dataset
     ###################
@@ -193,7 +199,7 @@ def parse_options(return_parser=False):
     # Arguments for training
     ###################
     train_group = parser.add_argument_group('trainer')
-    train_group.add_argument('--epochs', type=int, default=250, 
+    train_group.add_argument('--epochs', type=int, default=200, 
                              help='Number of epochs to run the training.')
     train_group.add_argument('--batch-size', type=int, default=512, 
                              help='Batch size for the training.')
@@ -208,15 +214,16 @@ def parse_options(return_parser=False):
                              help='Format in which to save models.')
     train_group.add_argument('--save-as-new', action='store_true', 
                              help='Save the model at every epoch (no overwrite).')
-    train_group.add_argument('--save-every', type=int, default=5, 
+    train_group.add_argument('--save-every', type=int, default=100, 
                              help='Save the model at every N epoch.')
     train_group.add_argument('--render-every', type=int, default=5,
                                 help='Render every N epochs')
     # TODO (ttakikawa): Only used for SDFs, but also should support RGB etc
     train_group.add_argument('--log-2d', action='store_true', 
                              help='Log cutting plane renders to TensorBoard.')
-    train_group.add_argument('--log-dir', type=str, default='_results/logs/runs/',
+    train_group.add_argument('--log-dir', type=str, default='_results/logs/runs/not_in_val/',
                              help='Log file directory for checkpoints.')
+    
     # TODO (ttakikawa): This is only really used in the SDF training but it should be useful for multiview too
     train_group.add_argument('--grow-every', type=int, default=-1,
                              help='Grow network every X epochs')
@@ -233,6 +240,12 @@ def parse_options(return_parser=False):
     train_group.add_argument('--growth-strategy', type=str, default='increase',
                              choices=['onebyone','increase','shrink', 'finetocoarse', 'onlylast'],
                              help='Strategy for coarse-to-fine training')
+
+    #追加
+    train_group.add_argument('--log-dir_noise_dim', type=str,
+                             help='Log file directory for checkpoints.')
+    train_group.add_argument('--log-dir_noise_size', type=str,
+                             help='Log file directory for checkpoints.')
     
     ###################
     # Arguments for training

@@ -1,0 +1,2 @@
+noise_size 20 noise_dim 40
+noise_size 30 noise_dim 80

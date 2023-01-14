@@ -24,6 +24,8 @@ class BasicDecoder(nn.Module):
         layer = nn.Linear,
         num_layers = 1, 
         hidden_dim = 128, 
+        noise_dim = 0,
+        noise_size = 1,
         skip       = []
     ):
         """Initialize the BasicDecoder.
@@ -43,8 +45,8 @@ class BasicDecoder(nn.Module):
         """
         super().__init__()
         
-        #self.input_dim = input_dim + 40 #inputの次元を増やす
-        self.input_dim = input_dim
+        #self.input_dim = input_dim #inputの次元を増やす
+        self.input_dim = input_dim + noise_dim#追加
         self.output_dim = output_dim   
         self.activation = activation
         self.bias = bias
@@ -52,6 +54,10 @@ class BasicDecoder(nn.Module):
         self.num_layers = num_layers
         self.hidden_dim = hidden_dim
         self.skip = skip
+
+        #追加
+        self.noise_size = noise_size
+
         if self.skip is None:
             self.skip = []
         

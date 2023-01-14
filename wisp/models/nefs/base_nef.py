@@ -49,6 +49,11 @@ class BaseNeuralField(nn.Module):
         view_multires    : int   = 4,
         num_layers       : int   = 1,
         position_input   : bool  = False,
+
+        # 追加
+        noise_dim : int = 0,
+        noise_size : int = 1,
+
         **kwargs
     ):
         super().__init__()
@@ -74,6 +79,9 @@ class BaseNeuralField(nn.Module):
         self.view_multires = view_multires
         self.num_layers = num_layers
         self.position_input = position_input
+        #追加
+        self.noise_dim = noise_dim
+        self.noise_size = noise_size
 
         self.kwargs = kwargs
 

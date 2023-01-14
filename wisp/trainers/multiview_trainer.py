@@ -33,6 +33,7 @@ class MultiviewTrainer(BaseTrainer):
         if self.extra_args["prune_every"] > -1 and epoch > 0 and epoch % self.extra_args["prune_every"] == 0:
             self.pipeline.nef.prune()
             self.init_optimizer()
+        
 
     def init_log_dict(self):
         """Custom log dict.
@@ -120,6 +121,13 @@ class MultiviewTrainer(BaseTrainer):
         with torch.no_grad():
             for idx, (img, ray_o, ray_d,img_name) in tqdm(enumerate(zip(imgs, ray_os, ray_ds,img_names))):
                 
+                #idxが1~14ならpredictしない
+                print("-------------------------")
+                #sprint("idx",idx)
+                print("img_name",img_name)
+                print("img_names",img_names)
+
+            
                 rays = Rays(ray_o, ray_d, dist_min=rays.dist_min, dist_max=rays.dist_max)
                 rays = rays.reshape(-1, 3)
                 rays = rays.to('cuda')
@@ -156,11 +164,11 @@ class MultiviewTrainer(BaseTrainer):
                 #assert False
                 exr_name = os.path.join(self.valid_log_dir, img_name + "-" + out_name + ".exr")
                 png_name = os.path.join(self.valid_log_dir, img_name + "-" + out_name + ".png" )
-                write_exr(exr_name, exrdict)
+                #write_exr(exr_name, exrdict) #コメントアウト追加
                 write_png((png_name), rb.cpu().image().byte().rgb.numpy())
                 print("len(rb.cpu().image().byte().rgb.numpy())",len(rb.cpu().image().byte().rgb.numpy()))
                 print(len(img_name))
-        
+    
                 #self.make_error_map(rb.cpu().image().byte().rgb.numpy(),img_name)
 
         psnr_total /= len(imgs)
@@ -196,8 +204,10 @@ class MultiviewTrainer(BaseTrainer):
         print("self.log_dir",self.log_dir)
 
         log.info(f"Saving validation result to {self.valid_log_dir}")
+        #追加 ディレクトリ作成
         if not os.path.exists(self.valid_log_dir):
             os.makedirs(self.valid_log_dir)
+            #os.makedirs("テスト")
 
         metric_dicts = []
         lods = list(range(self.pipeline.nef.num_lods))[::-1]
@@ -205,10 +215,13 @@ class MultiviewTrainer(BaseTrainer):
             #metric_dicts.append(self.evaluate_metrics(epoch, data["rays"], imgs, lod, f"lod{lod}"))
             print("lod",lod)
             print("len_lod",len(lods))
-            metric_dicts.append(self.evaluate_metrics(epoch, data["rays"], imgs, lod, data["cameras"].keys(),f"lod{lod}"))
+            if lod==1:
+                metric_dicts.append(self.evaluate_metrics(epoch, data["rays"], imgs, lod, data["cameras"].keys(),f"lod{lod}"))
+        """
         df = pd.DataFrame(metric_dicts)
         df['lod'] = lods
         df.to_csv(os.path.join(self.valid_log_dir, "lod.csv"))
+        """
 
     def make_error_map(self,predict_img_data,img_name):
         img = Image.open(f"./fox/val/{img_name}.jpg")

@@ -41,7 +41,7 @@ renderer:
 
 trainer:
     trainer_type: 'MultiviewTrainer'
-    epochs: 50
+    epochs: 200
     batch_size: 1
     model_format: 'full'
     valid_every: 50

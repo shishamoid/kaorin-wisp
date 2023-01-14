@@ -5,7 +5,34 @@ python3 app/main.py --config configs/nglod_nerf.yaml --dataset-path ./V8_ --num-
 
 #instantngp学習
 python3 app/main.py --config configs/ngp_nerf.yaml --multiview-dataset-format standard --mip 0 --dataset-path ./fox
+
+#探す
 find ./ -name '*.py' -print0 | xargs -0 grep valid-only 
 
 #validationだけ
 python3 app/main.py --config configs/ngp_nerf.yaml --multiview-dataset-format standard --mip 0 --dataset-path ./fox --valid-only --pretrained ./_results/logs/runs/test-ngp-nerf/20221013-012056/model.pth
+
+#フォルダ整理
+20221028-154916_fix_noise_some_viewpoints ノイズ固定(多分)(seed固定)
+
+20221103-004724 ノイズありで学習(ノイズ有無での差異を改めて確認するため)
+20221103-145343 ノイズなしで学習(ノイズ有無での差異を改めて確認するため)
+
+
+#研究進捗
+8月頭 テーマ決定
+8月中旬 動かして
+
+##ノイズ追加する
+・basic_decoder.pyのself.input_dimを変更
+・nerf.pyの#乱数追加のところコメントアウト外す
+
+## 11/14
+Val減らした fox_lightに変更
+python3 app/main.py --config configs/ngp_nerf.yaml --multiview-dataset-format standard --mip 0 --dataset-path ./fox_light
+上から1~8 3,5がoutofmemory
+・11/14 sample1~9 ノイズなし、全て同条件で学習、学習ごとのばらつきを確認
+・11/15
+20221115-004218 ノイズ20次元
+20221116-000544 ノイズ40次元
+20221117-021844 ノイズ80次元 ※tmuxのセッション名はnoise60
