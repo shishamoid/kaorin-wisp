@@ -213,8 +213,6 @@ class MultiviewTrainer(BaseTrainer):
         lods = list(range(self.pipeline.nef.num_lods))[::-1]
         for lod in lods:
             #metric_dicts.append(self.evaluate_metrics(epoch, data["rays"], imgs, lod, f"lod{lod}"))
-            print("lod",lod)
-            print("len_lod",len(lods))
             if lod==1:
                 metric_dicts.append(self.evaluate_metrics(epoch, data["rays"], imgs, lod, data["cameras"].keys(),f"lod{lod}"))
         """

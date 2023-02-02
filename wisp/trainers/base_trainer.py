@@ -111,6 +111,7 @@ class BaseTrainer(ABC):
         print("=======")
         print("num_epochs",num_epochs)
         #assert False
+        #assert False
         self.batch_size = batch_size
         self.exp_name = exp_name if exp_name else "unnamed_experiment"
 

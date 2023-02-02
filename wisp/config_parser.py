@@ -408,8 +408,11 @@ def get_modules_from_config(args):
     pipeline = Pipeline(nef, tracer)
 
     if args.pretrained:
+        print("pre~~~~~~~~~~~~~")
+        print("args.model_format",args.model_format)
         if args.model_format == "full":
             pipeline = torch.load(args.pretrained)
+            #print(pipeline)
         else:
             pipeline.load_state_dict(torch.load(args.pretrained))
     pipeline.to(device)

@@ -53,6 +53,8 @@ class BaseNeuralField(nn.Module):
         # 追加
         noise_dim : int = 0,
         noise_size : int = 1,
+        _save_noise_dim :int = 0,
+        _save_noise_size :int =0,
 
         **kwargs
     ):
@@ -82,6 +84,8 @@ class BaseNeuralField(nn.Module):
         #追加
         self.noise_dim = noise_dim
         self.noise_size = noise_size
+        self._save_noise_dim = 0
+        self._save_noise_size = 0
 
         self.kwargs = kwargs
 

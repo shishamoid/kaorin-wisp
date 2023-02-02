@@ -56,7 +56,11 @@ class BasicDecoder(nn.Module):
         self.skip = skip
 
         #追加
+        """
         self.noise_size = noise_size
+        self._save_noise_dim = 0
+        self._save_noise_size = 0
+        """
 
         if self.skip is None:
             self.skip = []

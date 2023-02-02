@@ -29,6 +29,13 @@ from wisp.models.grids import *
 
 import kaolin.ops.spc as spc_ops
 
+with open("./uncertain_condition.txt") as f:
+    s = f.read()
+    print(type(s))
+    print(s)   
+    _noise_dim = s.split("|")[0].split(":")[1]
+    _noise_size = s.split("|")[1].split(":")[1]
+
 class NeuralRadianceField(BaseNeuralField):
     """Model for encoding radiance fields (density and plenoptic color)
     """
@@ -59,12 +66,13 @@ class NeuralRadianceField(BaseNeuralField):
             
         #追加
         print("###############")
-        print(self.noise_dim)
-        #assert False
-        print("input_dim",self.input_dim) #59
-        print("self.activation_type",self.activation_type)
-        print("get_activation_class",get_activation_class(self.activation_type))
-        print("get_layer_class",get_layer_class(self.layer_type))
+        print("ノイズdim",self.noise_dim)
+        self._save_noise_dim = self.noise_dim
+        print("ノイズsize",self.noise_size)
+        self._save_noise_size = self.noise_size
+        with open("uncertain_condition.txt", mode='w') as f:
+            writelist = ["noise_dim:" +str(self.noise_dim)+"|"+"noise_size:"+str(self.noise_size)]
+            f.writelines(writelist)
         print("###############")
         self.decoder = BasicDecoder(self.input_dim, 4, get_activation_class(self.activation_type), True,
                                     layer=get_layer_class(self.layer_type), num_layers=self.num_layers,
@@ -176,11 +184,15 @@ class NeuralRadianceField(BaseNeuralField):
                 self.view_embedder(-ray_d)[:,None].repeat(1, num_samples, 1).view(-1, self.view_embed_dim)], dim=-1)
 
         #乱数追加部分
-        noize_dim = self.noise_dim
+        """        
+        noise_dim = self.noise_dim
         noise_size = self.noise_size
-        
+        """
+        #assert False
         torch.manual_seed(0)
-        arr = np.random.randn(int(fdir.size(dim=0)),noize_dim)*noise_size
+        #arr1 = np.random.randn(int(fdir.size(dim=0)),noise_dim)*noise_size
+        arr = np.random.randn(int(fdir.size(dim=0)),int(_noise_dim))*int(_noise_size)
+
         tensorx = torch.from_numpy(arr.astype(np.float32)).clone()
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         tensorx = tensorx.to(device)
