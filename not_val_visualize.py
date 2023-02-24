@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import glob
 
-noise_dim_list = [40]
-noise_size_list = [1,4,50,100,150]
+noise_dim_list = [10,40,80,120]
+noise_size_list = [50]
 img_idx_list = ["0003","0035","0097"]
 
 def to_pil_image(image):
@@ -69,8 +69,8 @@ for k in range(len(img_idx_list)):
             data = absolute_errors.flatten() # 一列にする
             fig = plt.figure() # ヒストグラム画像の保存，ちょっと行儀悪いけどとりあえず
             plt.hist(data, bins=16) # ヒストグラムを描画
-            plt.ylabel("difference frequency")
-            plt.xlabel("difference size")
+            plt.ylabel("difference frequency",fontsize=18)
+            plt.xlabel("difference size",fontsize=18)
             plt.ylim(0, 1*10**6.5)
             plt.xlim(0, 1.5)
-            fig.savefig(Path.cwd() / "./visualize_diff_notinval/{}_noisesize_{}_noisedim_{}_absolute_errors_hist_notinval.png".format(img_idx,noise_size,noise_dim)) # 保存
+            fig.savefig(Path.cwd() / "./visualize_diff_notinval/{}_noisesize_{}_noisedim_{}_notinval.png".format(img_idx,noise_size,noise_dim)) # 保存

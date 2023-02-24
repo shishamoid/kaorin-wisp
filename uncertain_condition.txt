@@ -1,1 +1,1 @@
-noise_dim:120|noise_size:100
+noise_dim:40|noise_size:100
