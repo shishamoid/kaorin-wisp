@@ -3,14 +3,9 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 import glob
-import time
-import statistics
-#import mathf
-from sklearn.preprocessing import MinMaxScaler
 
-noise_dim_list = [40]
+noise_dim_list = [10,40,80,120]
 noise_size_list = [10,100,200,500]
-#img_idx_list = ["0035","0097"]
 img_idx_list = ["0035","0003","0097"]
 inval_or_notinval = "notinval"
 
@@ -22,9 +17,8 @@ def get_image_list(path_list):
     print("len(path_list)",len(path_list))
 
     for i in range(len(path_list)):
-        #print("パス",path_list[i])
-        image_1 = Image.open(path_list[i][0])#globがリストでとってくる
-        image_array = np.array(image_1)
+        image_list = Image.open(path_list[i][0])
+        image_array = np.array(image_list)
         image_array = image_array.astype(np.float64) / 255
         image_array_all.append(image_array)
     return image_array_all
@@ -56,43 +50,23 @@ for k in range(len(img_idx_list)):
 
     print("path_list",len(image_path_list))
     image_list = get_image_list(image_path_list)
-    image_1 = image_list
     print("=======================")
-    print("SHAPE",image_1[1][1][1][1])
-
-    start = time.time()
-    _uncer_list=np.zeros((1920,1080))
-    for n in range(1920):
-        for m in range(1080):
+    print("SHAPE",image_list[1][1][1][1])
+    uncer_list=np.zeros((1920,1080))
+    
+    for n in range(1920):#縦ピクセルごとに計算
+        for m in range(1080):#横ピクセルごとに計算
             _un_list_3 = np.zeros(1)
 
-            for s in range(3):
-            #np.mean([image_1[i][j][k],correct_image[i][j][]])
-                #for i in range(len(image_1))
-                #print()
-                varia = np.var([[image_1[0][n][m][s]],[image_1[1][n][m][s]],[image_1[2][n][m][s]],[image_1[3][n][m][s]]])
+            for s in range(3):#RGBごとに計算
+                varia = np.var([[image_list[0][n][m][s]],[image_list[1][n][m][s]],[image_list[2][n][m][s]],[image_list[3][n][m][s]]])
 
                 _un_list_3+=varia
-            #print(_uncer_list[n][m])
-            _uncer_list[n][m] = _un_list_3/3
+            uncer_list[n][m] = _un_list_3/3
 
-    print(_uncer_list.shape)
+    max_val = uncer_list.max()
+    min_val = uncer_list.min()
+    uncer_list = uncer_list / (max_val - min_val)
 
-    #uncer_list = np.sum(_uncer_list,axis=2)
-
-    stop = time.time()
-    print("時間",start-stop)
-
-    #min_val = _uncer_list.min()
-    max_val = _uncer_list.max()
-    min_val = _uncer_list.min()
-    #assert(not np.isclose(max_val - min_val, 0)) # ゼロ割防止のチェック
-    _uncer_list = _uncer_list / (max_val - min_val)
-    
-
-    #rint(_uncer_list.shape)
-    uncer_list = _uncer_list
-
-    #uncer_list = uncer_list/len(noise_size_list)
     uncer_list_image = to_pil_image(uncer_list)
-    uncer_list_image.save("./uncertainlymap_{}_{}_9.png".format(img_idx,inval_or_notinval))
+    uncer_list_image.save("./uncertainlymap_{}_{}_10.png".format(img_idx,inval_or_notinval))
